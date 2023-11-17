@@ -4,7 +4,15 @@
 #include <QMainWindow>
 #include <colortool/colortool.h>
 #include <histogram/histogramtool.h>
+#include <utils/utils.h>
+#include <videoprocess/videoproc.h>
 
+extern "C"
+{
+#include <clog/log.h>
+}
+
+using namespace cv;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,11 +28,21 @@ public:
 
 
 private slots:
+    //主界面按键
     void on_Histogram_clicked();
     void on_colortool_clicked();
+    void on_videopc_clicked();
+    //子界面返回槽函数
+    void colortool_change_2_mainui_slot();
+    void histogramtool_change_2_mainui_slot();
+    void videopctool_change_2_mainui_slot();
+
 
 
 private:
     Ui::MainWindow *ui;
+    colortool coltool;
+    histogramtool histool;
+    videoproc videopc;
 };
 #endif // MAINWINDOW_H

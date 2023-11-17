@@ -15,6 +15,14 @@ public:
     explicit colortool(QWidget *parent = nullptr);
     ~colortool();
 
+signals:
+    void color_change2_mainwindow();
+
+private slots:
+    void on_openimage_clicked();
+
+    void on_pushButton_clicked();
+
 private:
     Ui::colortool *ui;
 };

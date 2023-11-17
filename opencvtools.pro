@@ -11,20 +11,25 @@ CONFIG += c++17
 SOURCES += \
     colortool/colortool.cpp \
     histogram/histogramtool.cpp \
-    opencvpp/opencvpp.cpp \
+    utils/utils.cpp \
+    clog/log.c \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    videoprocess/videoproc.cpp
 
 HEADERS += \
     colortool/colortool.h \
     histogram/histogramtool.h \
-    opencvpp/opencvpp.h \
-    mainwindow.h
+    utils/utils.h \
+    clog/log.h \
+    mainwindow.h \
+    videoprocess/videoproc.h
 
 FORMS += \
     colortool/colortool.ui \
     histogram/histogramtool.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    videoprocess/videoproc.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

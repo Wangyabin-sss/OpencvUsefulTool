@@ -12,3 +12,9 @@ histogramtool::~histogramtool()
 {
     delete ui;
 }
+
+void histogramtool::on_pushButton_clicked()
+{
+    emit histogram_change2_mainwindow();
+}
+

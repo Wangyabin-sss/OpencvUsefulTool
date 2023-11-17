@@ -40,6 +40,19 @@
      <string>色彩工具</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="videopc">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>40</y>
+      <width>101</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>视频工具</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -15,6 +15,12 @@ public:
     explicit histogramtool(QWidget *parent = nullptr);
     ~histogramtool();
 
+signals:
+    void histogram_change2_mainwindow();
+
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::histogramtool *ui;
 };
