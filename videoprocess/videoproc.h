@@ -2,11 +2,32 @@
 #define VIDEOPROC_H
 
 #include <QWidget>
+#include <QThread>
 #include <utils/utils.h>
 
 namespace Ui {
 class videoproc;
 }
+
+
+class MyThread : public QThread
+{
+    Q_OBJECT
+public:
+    cv::VideoCapture *capthread;
+
+protected:
+    void run();
+
+signals:
+    void show_frame_on_label(QImage img, int flag);
+
+private:
+
+
+};
+
+
 
 class videoproc : public QWidget
 {
@@ -27,17 +48,26 @@ private slots:
 
     void on_comboBox_currentIndexChanged(int index);
 
-    void show_frame_label(QImage img);
+    void show_frame_label(QImage img, int flag);
 
     void on_screenshot_clicked();
 
     void on_screenshot2_clicked();
 
+    void on_horizontalSlider_valueChanged(int value);
+
+    void on_pushButton_2_clicked();
+
     void on_horizontalSlider_actionTriggered(int action);
+
+    void on_horizontalSlider_sliderReleased();
+
+    void on_horizontalSlider_sliderPressed();
 
 private:
     Ui::videoproc *ui;
-    cv::VideoCapture cap;
+    cv::VideoCapture *cap;
+    MyThread mth;
 };
 
 #endif // VIDEOPROC_H

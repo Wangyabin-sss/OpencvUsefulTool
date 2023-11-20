@@ -47,6 +47,7 @@ void MainWindow::colortool_change_2_mainui_slot()
     coltool.hide();
     this->show();
 }
+
 void MainWindow::histogramtool_change_2_mainui_slot()
 {
     histool.hide();
