@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QThread>
+#include <QTime>
 #include <utils/utils.h>
 
 namespace Ui {

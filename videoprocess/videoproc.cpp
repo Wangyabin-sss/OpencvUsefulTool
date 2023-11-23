@@ -30,7 +30,7 @@ void videoproc::on_pushButton_clicked()
 std::vector<std::string> filelist;
 void videoproc::on_openvideo_clicked()
 {
-    filelist = get_filename_dialog("*.avi");
+    filelist = get_filename_dialog("*.avi;*.mp4");
     Dbuginfo("get %d file\n", filelist.size());
     for(size_t i=0;i<filelist.size();i++)
     {
@@ -40,9 +40,10 @@ void videoproc::on_openvideo_clicked()
     }
 }
 
-volatile int vthreadrun = 0;
-volatile int qsilder_status=0;
-volatile long framenow=0;
+volatile int vthreadrun = 0;   //控制视频线程起停
+volatile int qsilder_status=0; //拖动进度条改变
+volatile long framenow=0;      //当前帧
+volatile int vthread_saveimg = 0;
 cv::Mat vframe;
 volatile long vtotalFrameNumber;
 volatile double vratefps;
@@ -69,7 +70,9 @@ void videoproc::show_frame_label(QImage img, int flag)
     }
     else if(flag == FLAG_SAVE_IMG)
     {
-        QString filename(QString::number(framenow)+".bmp");
+        QDateTime dateTime= QDateTime::currentDateTime();//获取系统当前的时间
+        QString datastr = dateTime.toString("yyyy-MM-ddThh-mm-ssF");//格式化时间
+        QString filename(datastr+QString::number(framenow)+".bmp");
         img.save(filename,"BMP");
     }
 }
@@ -78,6 +81,13 @@ void videoproc::show_frame_label(QImage img, int flag)
 void videoproc::on_comboBox_currentIndexChanged(int index)
 {
     Dbuginfo("combox changed \"%s\"\n", filelist[index].c_str());
+    vthread_saveimg = 0;
+    framenow = 0;
+    if(ui->pushButton_2->text() == "stop")
+    {
+        vthreadrun = 0;
+        ui->pushButton_2->setText("start");
+    }
 
     if(cap->isOpened())
         cap->release();
@@ -100,7 +110,7 @@ void videoproc::on_comboBox_currentIndexChanged(int index)
 
 }
 
-volatile int vthread_saveimg = 0;
+
 void videoproc::on_screenshot_clicked()
 {
     vthread_saveimg = 1;

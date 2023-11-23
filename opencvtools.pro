@@ -11,6 +11,8 @@ CONFIG += c++17
 SOURCES += \
     colortool/colortool.cpp \
     histogram/histogramtool.cpp \
+    morphology/morpho.cpp \
+    preprocessing/preprocessing.cpp \
     utils/utils.cpp \
     clog/log.c \
     main.cpp \
@@ -20,6 +22,8 @@ SOURCES += \
 HEADERS += \
     colortool/colortool.h \
     histogram/histogramtool.h \
+    morphology/morpho.h \
+    preprocessing/preprocessing.h \
     utils/utils.h \
     clog/log.h \
     mainwindow.h \
@@ -29,6 +33,8 @@ FORMS += \
     colortool/colortool.ui \
     histogram/histogramtool.ui \
     mainwindow.ui \
+    morphology/morpho.ui \
+    preprocessing/preprocessing.ui \
     videoprocess/videoproc.ui
 
 # Default rules for deployment.
@@ -37,10 +43,18 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 
+msvc {
+    QMAKE_CFLAGS += /utf-8
+    QMAKE_CXXFLAGS += /utf-8
+}
+
 
 INCLUDEPATH += E:\Downloads\library\opencv4.7.0\build\include \
                E:\Downloads\library\opencv4.7.0\build\include\opencv2
 
 LIBS += E:\Downloads\library\opencv4.7.0\build\x64\vc16\lib\opencv_world470.lib
+
+RESOURCES += \
+    resource/resource.qrc
 
 

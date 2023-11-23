@@ -53,6 +53,32 @@
      <string>视频工具</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="morphologyproc">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>150</y>
+      <width>101</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>形态学工具</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="preprocessingtool">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>150</y>
+      <width>101</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>预处理工具</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
