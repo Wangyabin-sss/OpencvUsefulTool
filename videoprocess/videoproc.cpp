@@ -80,6 +80,9 @@ void videoproc::show_frame_label(QImage img, int flag)
 
 void videoproc::on_comboBox_currentIndexChanged(int index)
 {
+    if(index == -1)
+        return;
+
     Dbuginfo("combox changed \"%s\"\n", filelist[index].c_str());
     vthread_saveimg = 0;
     framenow = 0;

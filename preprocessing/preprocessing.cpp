@@ -41,13 +41,15 @@ void preprocessing::on_openimg_clicked()
     {
         procimgs.clear();
         imgsub = 0;
-        srcimage = cv::imread(filelist[0]);
+        srcimage = cv::imread(filelist[0], cv::IMREAD_UNCHANGED);
+        Dbuginfo("read img type is  %s\n", get_imgtype_string(srcimage.depth(),srcimage.channels()).c_str());
         for(int i=0;i<MAX_RESETIMGNUMS;i++)
         {
             procimgs.push_back(srcimage);
         }
         show_frame_label(Mat2QImage(srcimage),1);
         //show_frame_label(Mat2QImage(srcimage),2);
+        ui->label_2->clear();
     }
 }
 
@@ -85,7 +87,10 @@ void preprocessing::show_frame_label(QImage img, int labelnum)
 
 void preprocessing::on_saveimage_clicked()
 {
-
+    QDateTime dateTime= QDateTime::currentDateTime();//获取系统当前的时间
+    QString datastr = dateTime.toString("yyyy-MM-ddThh-mm-ssM");//格式化时间
+    QString filename(datastr+QString::number(imgsub)+".bmp");
+    cv::imwrite(std::string(filename.toStdString()), procimgs[imgsub]);
 }
 
 
@@ -186,7 +191,7 @@ void preprocessing::on_processimg_clicked()
         procimgs[imgsub] = procimg.clone();
         break;
     case 12:
-        if(srcimage.channels()==3)
+        if(srcimage.channels()>=3)
         {
             QMessageBox::information(this,"wanning","仅支持灰度图");
             break;
@@ -234,28 +239,28 @@ void preprocessing::on_comboBox_currentIndexChanged(int index)
         ui->lineEdit->setPlaceholderText("无需参数");
         break;
     case 3:
-
+        ui->lineEdit->setPlaceholderText("无需参数");
         break;
     case 4:
-
+        ui->lineEdit->setPlaceholderText("无需参数");
         break;
     case 5:
-
+        ui->lineEdit->setPlaceholderText("无需参数");
         break;
     case 6:
         ui->lineEdit->setPlaceholderText("无需参数");
         break;
     case 7:
-
+        ui->lineEdit->setPlaceholderText("无需参数");
         break;
     case 8:
-
+        ui->lineEdit->setPlaceholderText("无需参数");
         break;
     case 9:
-
+        ui->lineEdit->setPlaceholderText("无需参数");
         break;
     case 10:
-
+        ui->lineEdit->setPlaceholderText("无需参数");
         break;
     case 11:
         ui->lineEdit->setPlaceholderText("无需参数");

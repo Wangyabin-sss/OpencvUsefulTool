@@ -64,6 +64,54 @@ std::vector<std::string> get_filename_dialog(QString filetype)
 }
 
 
+/*
+#define CV_8U   0
+#define CV_8S   1
+#define CV_16U  2
+#define CV_16S  3
+#define CV_32S  4
+#define CV_32F  5
+#define CV_64F  6
+#define CV_16F  7
+*/
+std::string get_imgtype_string(int depth , int channel)
+{
+    std::string typestr;
+    switch (depth) {
+    case 0:
+        typestr.append("CV_8U");
+        break;
+    case 1:
+        typestr.append("CV_8S");
+        break;
+    case 2:
+        typestr.append("CV_16U");
+        break;
+    case 3:
+        typestr.append("CV_16S");
+        break;
+    case 4:
+        typestr.append("CV_32S");
+        break;
+    case 5:
+        typestr.append("CV_32F");
+        break;
+    case 6:
+        typestr.append("CV_64F");
+        break;
+    case 7:
+        typestr.append("CV_16F");
+        break;
+    default:
+        break;
+    }
+
+    typestr.append("C"+std::to_string(channel));
+    return typestr;
+}
+
+
+//----------------------------------------------------weight-preprocessing-----------------------------------------------------------
 cv::Mat proc_baipinghengsuanfa(cv::Mat &imgrgb)
 {
     cv::Mat g_srcImage,dstImage;
@@ -208,3 +256,171 @@ cv::Mat proc_zhuanBGRtu(cv::Mat &imggray)
     cv::cvtColor(imggray, bgrimg, cv::COLOR_GRAY2BGR);
     return bgrimg;
 }
+
+
+//----------------------------------------------------weight-histogram-----------------------------------------------------------
+std::vector<cv::Mat> his_BGRdetach_proc(cv::Mat &img)
+{
+    std::vector<cv::Mat> imgchannels,result;
+    if(img.channels()<3)
+    {
+        return result;
+    }
+
+    cv::split(img,imgchannels);
+
+    int bins = 256;
+    int histsize[] = { bins };
+    float range[] = { 0, 256 };
+    const float* histRange = { range };
+    cv::Mat  b_Hist, g_Hist, r_Hist;
+    //-------------计算各个通道的直方图--------------------------------------
+    cv::calcHist(&imgchannels[0], 1, 0, cv::Mat(), b_Hist, 1, histsize, &histRange, true, false); //B-通道
+    cv::calcHist(&imgchannels[1], 1, 0, cv::Mat(), g_Hist, 1, histsize, &histRange, true, false); //G-通道
+    cv::calcHist(&imgchannels[2], 1, 0, cv::Mat(), r_Hist, 1, histsize, &histRange, true, false); //R-通道
+
+    //------------设置直方图绘图参数----------------------------------------------------
+    int hist_h = 360;
+    int hist_w = bins * 3;
+    int bin_w = cvRound((double)hist_w / bins);
+    cv::Mat histImage(hist_h, hist_w, CV_8UC3, cv::Scalar(0, 0, 0));//创建一个黑底的图像，为了可以显示彩色，所以该绘制图像是一个8位的3通道图像
+    for(int i=0;i<3;i++)
+        result.push_back(histImage.clone());
+    //-------------将直方图归一化到[0,histImage.rows]  ------------------------------------------------------------------------------
+    cv::normalize(b_Hist, b_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //B-通道
+    cv::normalize(g_Hist, g_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //G-通道
+    cv::normalize(r_Hist, r_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //R-通道
+    //--------------绘制直方图  ----------------------------------------------------------------
+    for (int i = 1; i < bins; i++)
+    {
+        //绘制B通道的直方图信息
+        cv::line(result[0], cv::Point(bin_w*(i - 1), hist_h - cvRound(b_Hist.at<float>(i - 1))),
+                 cv::Point(bin_w*(i), hist_h - cvRound(b_Hist.at<float>(i))), cv::Scalar(255, 0, 0), 2, 8, 0);
+        //绘制G通道的直方图信息
+        cv::line(result[1], cv::Point(bin_w*(i - 1), hist_h - cvRound(g_Hist.at<float>(i - 1))),
+                 cv::Point(bin_w*(i), hist_h - cvRound(g_Hist.at<float>(i))), cv::Scalar(0, 255, 0), 2, 8, 0);
+        //绘制R通道的直方图信息
+        cv::line(result[2], cv::Point(bin_w*(i - 1), hist_h - cvRound(r_Hist.at<float>(i - 1))),
+                 cv::Point(bin_w*(i), hist_h - cvRound(r_Hist.at<float>(i))), cv::Scalar(0, 0, 255), 2, 8, 0);
+    }
+
+
+    return result;
+}
+
+
+std::vector<cv::Mat> his_HSVdetach_proc(cv::Mat &srcimg)
+{
+    cv::Mat img = srcimg.clone();
+    std::vector<cv::Mat> imgchannels,result;
+    if(img.channels()<3)
+    {
+        return result;
+    }
+
+    cv::cvtColor(img,img,cv::COLOR_BGR2HSV);
+    cv::split(img,imgchannels);
+
+    int bins = 256;
+    int histsize[] = { bins };
+    float range[] = { 0, 256 };
+    const float* histRange = { range };
+    cv::Mat  b_Hist, g_Hist, r_Hist;
+    //-------------计算各个通道的直方图--------------------------------------
+    cv::calcHist(&imgchannels[0], 1, 0, cv::Mat(), b_Hist, 1, histsize, &histRange, true, false); //B-通道
+    cv::calcHist(&imgchannels[1], 1, 0, cv::Mat(), g_Hist, 1, histsize, &histRange, true, false); //G-通道
+    cv::calcHist(&imgchannels[2], 1, 0, cv::Mat(), r_Hist, 1, histsize, &histRange, true, false); //R-通道
+
+    //------------设置直方图绘图参数----------------------------------------------------
+    int hist_h = 360;
+    int hist_w = bins * 3;
+    int bin_w = cvRound((double)hist_w / bins);
+    cv::Mat histImage(hist_h, hist_w, CV_8UC3, cv::Scalar(0, 0, 0));//创建一个黑底的图像，为了可以显示彩色，所以该绘制图像是一个8位的3通道图像
+    for(int i=0;i<3;i++)
+        result.push_back(histImage);
+    //-------------将直方图归一化到[0,histImage.rows]  ------------------------------------------------------------------------------
+    cv::normalize(b_Hist, b_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //B-通道
+    cv::normalize(g_Hist, g_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //G-通道
+    cv::normalize(r_Hist, r_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //R-通道
+    //--------------绘制直方图  ----------------------------------------------------------------
+    for (int i = 1; i < bins; i++)
+    {
+        //绘制B通道的直方图信息
+        cv::line(result[0], cv::Point(bin_w*(i - 1), hist_h - cvRound(b_Hist.at<float>(i - 1))),
+                 cv::Point(bin_w*(i), hist_h - cvRound(b_Hist.at<float>(i))), cv::Scalar(255, 0, 0), 2, 8, 0);
+        //绘制G通道的直方图信息
+        cv::line(result[1], cv::Point(bin_w*(i - 1), hist_h - cvRound(g_Hist.at<float>(i - 1))),
+                 cv::Point(bin_w*(i), hist_h - cvRound(g_Hist.at<float>(i))), cv::Scalar(0, 255, 0), 2, 8, 0);
+        //绘制R通道的直方图信息
+        cv::line(result[2], cv::Point(bin_w*(i - 1), hist_h - cvRound(r_Hist.at<float>(i - 1))),
+                 cv::Point(bin_w*(i), hist_h - cvRound(r_Hist.at<float>(i))), cv::Scalar(0, 0, 255), 2, 8, 0);
+    }
+
+
+    return result;
+}
+
+
+
+std::vector<cv::Mat> his_gray_projection(cv::Mat &imggray)
+{
+    int imgwidth    = imggray.cols;
+    int imgheight   = imggray.rows;
+    //int imgchannels = imggray.channels();
+    std::vector<cv::Mat> result;
+    std::vector<unsigned int> xpixall(imgheight),ypixall(imgwidth);
+    if(imggray.channels()!=1)
+        return result;
+
+    for(int y=0,data;y<imgheight;y++)
+    {
+        for(int x=0;x<imgwidth;x++)
+        {
+            data= (int)imggray.data[y*imgwidth+x];
+            xpixall[y] += data;
+            ypixall[x] += data;
+        }
+    }
+
+    unsigned int xmax=0,ymax=0;
+    for(size_t i=0;i<xpixall.size();i++)
+    {
+        if(xmax<xpixall[i])
+            xmax = xpixall[i];
+    }
+    for(size_t i=0;i<ypixall.size();i++)
+    {
+        if(ymax<ypixall[i])
+            ymax = ypixall[i];
+    }
+
+    cv::Mat imgcreate = cv::Mat::zeros(imggray.size(),CV_8UC1);
+    result.push_back(imgcreate.clone());
+    result.push_back(imgcreate.clone());
+    result.push_back(imgcreate.clone());
+    for(int i=0;i<imgheight;i++)
+    {
+        cv::line(result[0],cv::Point((imgwidth-((float)xpixall[i]/xmax)*imgwidth),i),cv::Point(imgwidth,i),cv::Scalar(127));
+    }
+    for(int i=0;i<imgwidth;i++)
+    {
+        cv::line(result[1],cv::Point(i,(imgheight-(((float)ypixall[i]/ymax)*imgheight))),cv::Point(i,imgheight),cv::Scalar(127));
+    }
+
+    for(int y=0;y<imgheight;y++)
+    {
+        for(int x=0;x<imgwidth;x++)
+        {
+            if((uchar)result[0].data[y*imgwidth+x]==127&&(uchar)result[1].data[y*imgwidth+x]==127)
+            {
+                result[2].data[y*imgwidth+x] = 127;
+            }
+        }
+    }
+
+    return result;
+}
+
+
+
+

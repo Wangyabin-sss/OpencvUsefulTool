@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QMessageBox>
+#include <QTime>
 #include <utils/utils.h>
 
 
