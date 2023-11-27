@@ -38,6 +38,7 @@ public:
     explicit videoproc(QWidget *parent = nullptr);
     ~videoproc();
 
+    MyThread mth;
 
 signals:
     void videopc_change2_mainwindow();
@@ -68,7 +69,7 @@ private slots:
 private:
     Ui::videoproc *ui;
     cv::VideoCapture *cap;
-    MyThread mth;
+
 };
 
 #endif // VIDEOPROC_H

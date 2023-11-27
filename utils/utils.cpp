@@ -258,6 +258,15 @@ cv::Mat proc_zhuanBGRtu(cv::Mat &imggray)
 }
 
 
+cv::Mat proc_zidongyuzhifenge(cv::Mat &imgray)
+{
+    cv::Mat srcimg = imgray.clone();
+    cv::Mat imgresult;
+    cv::adaptiveThreshold(srcimg, imgresult, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 11, 3);
+    return imgresult;
+}
+
+
 //----------------------------------------------------weight-histogram-----------------------------------------------------------
 std::vector<cv::Mat> his_BGRdetach_proc(cv::Mat &img)
 {

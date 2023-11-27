@@ -12,7 +12,6 @@ videoproc::videoproc(QWidget *parent) :
     mth.capthread = cap;
 
     QObject::connect(&mth,SIGNAL(show_frame_on_label(QImage,int)),this,SLOT(show_frame_label(QImage,int)));
-    mth.start();
 }
 
 videoproc::~videoproc()
@@ -22,14 +21,10 @@ videoproc::~videoproc()
     delete ui;
 }
 
-void videoproc::on_pushButton_clicked()
-{
-    emit videopc_change2_mainwindow();
-}
-
 std::vector<std::string> filelist;
 void videoproc::on_openvideo_clicked()
 {
+    ui->comboBox->clear();
     filelist = get_filename_dialog("*.avi;*.mp4");
     Dbuginfo("get %d file\n", filelist.size());
     for(size_t i=0;i<filelist.size();i++)
@@ -46,7 +41,7 @@ volatile long framenow=0;      //当前帧
 volatile int vthread_saveimg = 0;
 cv::Mat vframe;
 volatile long vtotalFrameNumber;
-volatile double vratefps;
+volatile double vratefps=24.0;
 #define FLAG_NULL   0
 #define FLAG_BUTTEN 1
 #define FLAG_SAVE_IMG 2
@@ -75,6 +70,12 @@ void videoproc::show_frame_label(QImage img, int flag)
         QString filename(datastr+QString::number(framenow)+".bmp");
         img.save(filename,"BMP");
     }
+}
+
+void videoproc::on_pushButton_clicked()
+{
+    vthreadrun = 2;
+    emit videopc_change2_mainwindow();
 }
 
 
@@ -182,6 +183,7 @@ void videoproc::on_pushButton_2_clicked()
 
 void MyThread::run()
 {
+    vthreadrun = 0;
 
     while(1)
     {
@@ -216,6 +218,8 @@ void MyThread::run()
             }
 
         }
+        if(vthreadrun == 2)
+            break;
 
         QThread::msleep(1000/vratefps);
     }

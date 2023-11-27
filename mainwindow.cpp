@@ -23,7 +23,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//-----------------------------------点击跳转按键槽函数-------------------------------------
+//------------------------------------点击跳转按键槽函数--------------------------------------
 void MainWindow::on_Histogram_clicked()
 {
     this->hide();
@@ -39,6 +39,7 @@ void MainWindow::on_colortool_clicked()
 void MainWindow::on_videopc_clicked()
 {
     this->hide();
+    videopc.mth.start();
     videopc.show();
 }
 

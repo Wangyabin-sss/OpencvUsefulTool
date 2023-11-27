@@ -7,6 +7,7 @@ preprocessing::preprocessing(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    imgsub = 0;
     ui->comboBox->addItem("白平衡算法");   //0
     ui->comboBox->addItem("二值化");      //1
     ui->comboBox->addItem("黑白翻转");    //2
@@ -20,6 +21,7 @@ preprocessing::preprocessing(QWidget *parent) :
     ui->comboBox->addItem("边缘锐化");   //10
     ui->comboBox->addItem("转灰度图");   //11
     ui->comboBox->addItem("转BGR");     //12
+    ui->comboBox->addItem("自动阈值分割"); //13
 }
 
 preprocessing::~preprocessing()
@@ -29,11 +31,13 @@ preprocessing::~preprocessing()
 
 void preprocessing::on_comeback_clicked()
 {
+    ui->label->clear();
+    ui->label_2->clear();
     emit preprocess_change2_mainwindow();
 }
 
 cv::Mat srcimage;
-std::vector<cv::Mat> procimgs;
+std::vector<cv::Mat> procimgs(MAX_RESETIMGNUMS,cv::Mat());
 void preprocessing::on_openimg_clicked()
 {
     std::vector<std::string> filelist = get_filename_dialog("*.jpg;*.bmp");
@@ -90,6 +94,11 @@ void preprocessing::on_saveimage_clicked()
     QDateTime dateTime= QDateTime::currentDateTime();//获取系统当前的时间
     QString datastr = dateTime.toString("yyyy-MM-ddThh-mm-ssM");//格式化时间
     QString filename(datastr+QString::number(imgsub)+".bmp");
+    if(procimgs[imgsub].empty())
+    {
+        QMessageBox::information(this,"error","保存失败\n图片为空");
+        return;
+    }
     cv::imwrite(std::string(filename.toStdString()), procimgs[imgsub]);
 }
 
@@ -197,6 +206,18 @@ void preprocessing::on_processimg_clicked()
             break;
         }
         procimg = proc_zhuanBGRtu(srcimage);
+        show_frame_label(Mat2QImage(procimg),2);
+        show_frame_label(Mat2QImage(srcimage),1);
+        imgsub = loop_add_one(imgsub);
+        procimgs[imgsub] = procimg.clone();
+        break;
+    case 13:
+        if(srcimage.channels()>=3)
+        {
+            QMessageBox::information(this,"wanning","仅支持灰度图");
+            break;
+        }
+        procimg = proc_zidongyuzhifenge(srcimage);
         show_frame_label(Mat2QImage(procimg),2);
         show_frame_label(Mat2QImage(srcimage),1);
         imgsub = loop_add_one(imgsub);

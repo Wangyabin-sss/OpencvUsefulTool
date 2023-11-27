@@ -28,6 +28,7 @@ cv::Mat proc_heibaifanzhuan(cv::Mat &imggray);
 cv::Mat proc_zhifangtujunhenghua(cv::Mat &imggray);
 cv::Mat proc_zhuanhuidutu(cv::Mat &imgbgr);
 cv::Mat proc_zhuanBGRtu(cv::Mat &imggray);
+cv::Mat proc_zidongyuzhifenge(cv::Mat &imgray);
 std::vector<cv::Mat> his_BGRdetach_proc(cv::Mat &img);
 std::vector<cv::Mat> his_gray_projection(cv::Mat &imggray);
 
