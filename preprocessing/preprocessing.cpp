@@ -1,5 +1,6 @@
 #include "preprocessing.h"
 #include "ui_preprocessing.h"
+#include <QListView>
 
 preprocessing::preprocessing(QWidget *parent) :
     QWidget(parent),
@@ -9,6 +10,24 @@ preprocessing::preprocessing(QWidget *parent) :
 
     funcwight = new QHBoxLayout();
     ui->verticalLayout_2->addLayout(funcwight);
+
+    QString str = "QComboBox QAbstractItemView:item\
+    \n{\
+            font-family: PingFangSC-Regular;\n\
+            font-size:14px;\n\
+            min-height:30px;\n\
+            min-width:20px;\n\
+    }\n";
+    QListView* listView = new QListView();
+    ui->comboBox->setView(listView);
+    ui->comboBox->setStyleSheet(str);
+
+    ui->textEdit->setLineWrapMode(QTextEdit::NoWrap);
+    ui->splitter->setStretchFactor(0,3);
+    ui->splitter->setStretchFactor(0,1);
+    QString style = QString("QSplitter::handle { background-color: rgb(179, 179, 179); }"); //分割线的颜色
+    ui->splitter->setStyleSheet(style);
+    ui->splitter->setHandleWidth(2);//分割线的宽度
 
     imgsub = 0;
     ui->comboBox->addItem("白平衡算法");   //0
@@ -25,6 +44,8 @@ preprocessing::preprocessing(QWidget *parent) :
     ui->comboBox->addItem("转灰度图");    //11
     ui->comboBox->addItem("转BGR");      //12
     ui->comboBox->addItem("自动阈值分割"); //13
+    ui->comboBox->addItem("腐蚀");       //14
+    ui->comboBox->addItem("膨胀");       //15
 }
 
 
@@ -99,11 +120,15 @@ void preprocessing::show_frame_label(QImage img, int labelnum)
     {
         ui->label->setPixmap(QPixmap::fromImage(img).scaled(ui->label->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
         ui->label->setAlignment(Qt::AlignCenter);
+        ui->label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
+
     }
     else if(labelnum == 2)
     {
         ui->label_2->setPixmap(QPixmap::fromImage(img).scaled(ui->label_2->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
         ui->label_2->setAlignment(Qt::AlignCenter);
+        ui->label_2->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
+
     }
 }
 
@@ -121,7 +146,7 @@ void preprocessing::on_saveimage_clicked()
     cv::imwrite(std::string(filename.toStdString()), procimgs[imgsub]);
 }
 
-
+std::string pathutilsfile = "../opencvtools/utils/utils.cpp";
 void preprocessing::on_processimg_clicked()
 {
     //检查结果是否需要叠加
@@ -135,6 +160,7 @@ void preprocessing::on_processimg_clicked()
             QMessageBox::information(this,"wanning","仅支持BGR图");
             break;
         }
+
         procimg = proc_baipinghengsuanfa(srcimage);
         show_frame_label(Mat2QImage(procimg),2);
         show_frame_label(Mat2QImage(srcimage),1);
@@ -149,6 +175,7 @@ void preprocessing::on_processimg_clicked()
                 QMessageBox::information(this,"wanning","仅支持灰度图");
                 break;
             }
+
             procimg = proc_erzhihua(srcimage, funcline1->text().toDouble(), funccombox1->currentIndex());
             show_frame_label(Mat2QImage(procimg),2);
             show_frame_label(Mat2QImage(srcimage),1);
@@ -168,6 +195,7 @@ void preprocessing::on_processimg_clicked()
 //            cv::cvtColor(srcimage,grayimg,cv::COLOR_BGR2GRAY);
 //            cv::imshow("tmp", grayimg);
         }
+
         procimg = proc_heibaifanzhuan(srcimage);
         show_frame_label(Mat2QImage(procimg),2);
         show_frame_label(Mat2QImage(srcimage),1);
@@ -189,6 +217,7 @@ void preprocessing::on_processimg_clicked()
             QMessageBox::information(this,"wanning","仅支持灰度图");
             break;
         }
+
         procimg = proc_zhifangtujunhenghua(srcimage);
         show_frame_label(Mat2QImage(procimg),2);
         show_frame_label(Mat2QImage(srcimage),1);
@@ -213,6 +242,7 @@ void preprocessing::on_processimg_clicked()
             QMessageBox::information(this,"wanning","仅支持BGR图");
             break;
         }
+
         procimg = proc_zhuanhuidutu(srcimage);
         show_frame_label(Mat2QImage(procimg),2);
         show_frame_label(Mat2QImage(srcimage),1);
@@ -225,6 +255,7 @@ void preprocessing::on_processimg_clicked()
             QMessageBox::information(this,"wanning","仅支持灰度图");
             break;
         }
+
         procimg = proc_zhuanBGRtu(srcimage);
         show_frame_label(Mat2QImage(procimg),2);
         show_frame_label(Mat2QImage(srcimage),1);
@@ -237,11 +268,28 @@ void preprocessing::on_processimg_clicked()
             QMessageBox::information(this,"wanning","仅支持灰度图");
             break;
         }
+
         procimg = proc_zidongyuzhifenge(srcimage);
         show_frame_label(Mat2QImage(procimg),2);
         show_frame_label(Mat2QImage(srcimage),1);
         imgsub = loop_add_one(imgsub);
         procimgs[imgsub] = procimg.clone();
+        break;
+    case 14:
+        if(srcimage.channels()>=3)
+        {
+            QMessageBox::information(this,"wanning","仅支持灰度图");
+            break;
+        }
+
+        break;
+    case 15:
+        if(srcimage.channels()>=3)
+        {
+            QMessageBox::information(this,"wanning","仅支持灰度图");
+            break;
+        }
+
         break;
     default:
         break;
@@ -268,7 +316,6 @@ void preprocessing::on_chehui_clicked()
 
 void preprocessing::on_comboBox_currentIndexChanged(int index)
 {
-
     //删除所有子控件
     while (funcwight->count() != 0)
     {
@@ -280,13 +327,13 @@ void preprocessing::on_comboBox_currentIndexChanged(int index)
         }
     }
 
-
     switch (index) {
     case 0:
         funclabel1 = new QLabel;
         funclabel1->setText("无需设置");
         funcwight->addWidget(funclabel1);
         ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_baipinghengsuanfa").data());
         break;
     case 1:
         funclabel1 = new QLabel;
@@ -307,12 +354,14 @@ void preprocessing::on_comboBox_currentIndexChanged(int index)
         funcwight->addWidget(funclabel3);
         funcwight->addStretch(); //添加弹簧
         ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_erzhihua").data());
         break;
     case 2:
         funclabel1 = new QLabel;
         funclabel1->setText("无需设置");
         funcwight->addWidget(funclabel1);
         ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_heibaifanzhuan").data());
         break;
     case 3:
         funclabel1 = new QLabel;
@@ -337,6 +386,7 @@ void preprocessing::on_comboBox_currentIndexChanged(int index)
         funclabel1->setText("无需设置");
         funcwight->addWidget(funclabel1);
         ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_zhifangtujunhenghua").data());
         break;
     case 7:
         funclabel1 = new QLabel;
@@ -367,18 +417,35 @@ void preprocessing::on_comboBox_currentIndexChanged(int index)
         funclabel1->setText("无需设置");
         funcwight->addWidget(funclabel1);
         ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_zhuanhuidutu").data());
         break;
     case 12:
         funclabel1 = new QLabel;
         funclabel1->setText("无需设置");
         funcwight->addWidget(funclabel1);
         ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_zhuanBGRtu").data());
         break;
     case 13:
         funclabel1 = new QLabel;
         funclabel1->setText("无需设置");
         funcwight->addWidget(funclabel1);
         ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_zidongyuzhifenge").data());
+        break;
+    case 14:
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_fushi").data());
+        break;
+    case 15:
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_pengzhang").data());
         break;
     default:
         break;

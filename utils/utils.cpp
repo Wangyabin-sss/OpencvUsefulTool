@@ -111,6 +111,41 @@ std::string get_imgtype_string(int depth , int channel)
 }
 
 
+std::string get_funcode_from_file(std::string file, std::string funcname)
+{
+    std::string code;
+    std::ifstream readfile;
+    readfile.open(file,std::ios::binary);
+    if(!readfile.is_open())
+    {
+        Dbugerror("open file %s error\n",file.c_str());
+        code  = "can't open "+file;
+        return code;
+    }
+    std::string linedata;
+    int num0=0,num1=0,findflag=0;
+    while(std::getline(readfile,linedata))
+    {
+        if(linedata.find(funcname)!=std::string::npos)
+            findflag = 1;
+        if(findflag == 1)
+        {
+            code+=linedata+"\n";
+            if(linedata.find("{")!=std::string::npos)
+                num0++;
+            if(linedata.find("}")!=std::string::npos)
+                num1++;
+            if(num0 == num1)
+                if(num0 != 0)
+                    break;
+        }
+    }
+    readfile.close();
+    //std::cout<<code<<std::endl;
+    return code;
+}
+
+
 //----------------------------------------------------weight-preprocessing-----------------------------------------------------------
 cv::Mat proc_baipinghengsuanfa(cv::Mat &imgrgb)
 {
@@ -266,6 +301,23 @@ cv::Mat proc_zidongyuzhifenge(cv::Mat &imgray)
     return imgresult;
 }
 
+cv::Mat proc_fushi(cv::Mat &imggray, int shapetype, cv::Size coresize, int nums)
+{
+    cv::Mat srcimg = imggray.clone();
+    cv::Mat ret;
+    cv::Mat structureElement = cv::getStructuringElement(shapetype, coresize); //创造用于腐蚀膨胀的内核形状
+    cv::erode(srcimg, ret, structureElement, cv::Point(-1,-1), nums);  //腐蚀
+    return ret;
+}
+
+cv::Mat proc_pengzhang(cv::Mat &imggray, int shapetype, cv::Size coresize, int nums)
+{
+    cv::Mat srcimg = imggray.clone();
+    cv::Mat ret;
+    cv::Mat structureElement = cv::getStructuringElement(shapetype, coresize); //创造用于腐蚀膨胀的内核形状
+    cv::dilate(srcimg, ret, structureElement, cv::Point(-1,-1), nums);  //腐蚀
+    return ret;
+}
 
 //----------------------------------------------------weight-histogram-----------------------------------------------------------
 std::vector<cv::Mat> his_BGRdetach_proc(cv::Mat &img)

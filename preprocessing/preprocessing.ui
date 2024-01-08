@@ -15,8 +15,11 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="8,1">
-     <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QWidget" name="">
       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="20">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -35,6 +38,12 @@
          </item>
          <item>
           <widget class="QLabel" name="label_2">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
            <property name="text">
             <string>TextLabel</string>
            </property>
@@ -43,8 +52,8 @@
         </layout>
        </item>
       </layout>
-     </item>
-     <item>
+     </widget>
+     <widget class="QWidget" name="">
       <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,1,0,10">
        <item>
         <widget class="QPushButton" name="comeback">
@@ -134,7 +143,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>保存</string>
+          <string>保存图片</string>
          </property>
         </widget>
        </item>
@@ -146,11 +155,14 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
         </widget>
        </item>
       </layout>
-     </item>
-    </layout>
+     </widget>
+    </widget>
    </item>
   </layout>
  </widget>
