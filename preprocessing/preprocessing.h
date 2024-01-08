@@ -4,6 +4,10 @@
 #include <QWidget>
 #include <QMessageBox>
 #include <QTime>
+#include <QMenu>
+#include <QToolBar>
+#include <QHBoxLayout>
+#include <QLineEdit>
 #include <utils/utils.h>
 
 
@@ -42,12 +46,24 @@ private slots:
 
     void on_comboBox_currentIndexChanged(int index);
 
+    void actionsSlot(void);
+
     int loop_add_one(int num);
     int loop_sub_one(int num);
 
 private:
     Ui::preprocessing *ui;
     int imgsub;
+    QHBoxLayout *funcwight;
+    QLabel *funclabel1;
+    QLabel *funclabel2;
+    QLabel *funclabel3;
+    QComboBox *funccombox1;
+    QComboBox *funccombox2;
+    QComboBox *funccombox3;
+    QLineEdit *funcline1;
+    QLineEdit *funcline2;
+    QLineEdit *funcline3;
 };
 
 #endif // PREPROCESSING_H

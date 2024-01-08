@@ -23,7 +23,7 @@ QString str2qstr(const std::string str);
 std::string qstr2str(const QString qstr);
 
 cv::Mat proc_baipinghengsuanfa(cv::Mat &imgrgb);
-cv::Mat proc_erzhihua(cv::Mat &imggray, double thread);
+cv::Mat proc_erzhihua(cv::Mat &imggray, double thread, int num);
 cv::Mat proc_heibaifanzhuan(cv::Mat &imggray);
 cv::Mat proc_zhifangtujunhenghua(cv::Mat &imggray);
 cv::Mat proc_zhuanhuidutu(cv::Mat &imgbgr);

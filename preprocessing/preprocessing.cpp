@@ -7,6 +7,9 @@ preprocessing::preprocessing(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    funcwight = new QHBoxLayout();
+    ui->verticalLayout_2->addLayout(funcwight);
+
     imgsub = 0;
     ui->comboBox->addItem("白平衡算法");   //0
     ui->comboBox->addItem("二值化");      //1
@@ -17,16 +20,32 @@ preprocessing::preprocessing(QWidget *parent) :
     ui->comboBox->addItem("直方图均衡化"); //6
     ui->comboBox->addItem("查找轮廓");    //7
     ui->comboBox->addItem("对比度调整");  //8
-    ui->comboBox->addItem("亮度调整");   //9
-    ui->comboBox->addItem("边缘锐化");   //10
-    ui->comboBox->addItem("转灰度图");   //11
-    ui->comboBox->addItem("转BGR");     //12
+    ui->comboBox->addItem("亮度调整");    //9
+    ui->comboBox->addItem("边缘锐化");    //10
+    ui->comboBox->addItem("转灰度图");    //11
+    ui->comboBox->addItem("转BGR");      //12
     ui->comboBox->addItem("自动阈值分割"); //13
 }
+
 
 preprocessing::~preprocessing()
 {
     delete ui;
+}
+
+
+void preprocessing::actionsSlot()
+{
+    QAction *action = (QAction*)sender();
+    QString actionText = action->text();
+
+    Dbuginfo("qtoolbutten %s\n",actionText.toLocal8Bit().data());
+
+    if("1_1" == actionText) {
+
+    } else if("1_2" == actionText) {
+
+    }
 }
 
 void preprocessing::on_comeback_clicked()
@@ -40,7 +59,7 @@ cv::Mat srcimage;
 std::vector<cv::Mat> procimgs(MAX_RESETIMGNUMS,cv::Mat());
 void preprocessing::on_openimg_clicked()
 {
-    std::vector<std::string> filelist = get_filename_dialog("*.jpg;*.bmp");
+    std::vector<std::string> filelist = get_filename_dialog("*.jpg;*.bmp;*.png");
     if(filelist.size()>0)
     {
         procimgs.clear();
@@ -105,6 +124,7 @@ void preprocessing::on_saveimage_clicked()
 
 void preprocessing::on_processimg_clicked()
 {
+    //检查结果是否需要叠加
     if(ui->checkBox->isChecked())
         srcimage = procimgs[imgsub].clone();
     cv::Mat procimg;
@@ -122,14 +142,14 @@ void preprocessing::on_processimg_clicked()
         procimgs[imgsub] = procimg.clone();
         break;
     case 1:
-        if(!ui->lineEdit->text().isEmpty())
+        if(!funcline1->text().isEmpty())
         {
             if(srcimage.channels()!=1)
             {
                 QMessageBox::information(this,"wanning","仅支持灰度图");
                 break;
             }
-            procimg = proc_erzhihua(srcimage, ui->lineEdit->text().toDouble());
+            procimg = proc_erzhihua(srcimage, funcline1->text().toDouble(), funccombox1->currentIndex());
             show_frame_label(Mat2QImage(procimg),2);
             show_frame_label(Mat2QImage(srcimage),1);
             imgsub = loop_add_one(imgsub);
@@ -248,46 +268,117 @@ void preprocessing::on_chehui_clicked()
 
 void preprocessing::on_comboBox_currentIndexChanged(int index)
 {
-    ui->lineEdit->clear();
+
+    //删除所有子控件
+    while (funcwight->count() != 0)
+    {
+        QLayoutItem* item = funcwight->takeAt(0);
+        if (item)
+        {
+            delete item->widget();
+            delete item;
+        }
+    }
+
+
     switch (index) {
     case 0:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 1:
-        ui->lineEdit->setPlaceholderText("设置阈值0~255：100");
+        funclabel1 = new QLabel;
+        funclabel2 = new QLabel;
+        funclabel3 = new QLabel;
+        funcline1 = new QLineEdit;
+        funccombox1 = new QComboBox;
+        funclabel1->setText("cv::threshold(srcimg, result, ");
+        funclabel2->setText(", 255, ");
+        funclabel3->setText(");");
+        funcline1->setText("100");
+        funccombox1->addItem("cv::THRESH_BINARY");
+        funccombox1->addItem("cv::THRESH_BINARY_INV");
+        funcwight->addWidget(funclabel1);
+        funcwight->addWidget(funcline1);
+        funcwight->addWidget(funclabel2);
+        funcwight->addWidget(funccombox1);
+        funcwight->addWidget(funclabel3);
+        funcwight->addStretch(); //添加弹簧
+        ui->verticalLayout_2->update();
         break;
     case 2:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 3:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 4:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 5:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 6:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 7:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 8:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 9:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 10:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 11:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     case 12:
-        ui->lineEdit->setPlaceholderText("无需参数");
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
+        break;
+    case 13:
+        funclabel1 = new QLabel;
+        funclabel1->setText("无需设置");
+        funcwight->addWidget(funclabel1);
+        ui->verticalLayout_2->update();
         break;
     default:
         break;

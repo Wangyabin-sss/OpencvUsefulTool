@@ -151,7 +151,7 @@ cv::Mat proc_baipinghengsuanfa(cv::Mat &imgrgb)
 }
 
 
-cv::Mat proc_erzhihua(cv::Mat &imggray, double thread)
+cv::Mat proc_erzhihua(cv::Mat &imggray, double thread, int num)
 {
     cv::Mat srcimg = imggray.clone();
     if(srcimg.channels()!=1)
@@ -159,7 +159,7 @@ cv::Mat proc_erzhihua(cv::Mat &imggray, double thread)
     else
     {
         cv::Mat result;
-        cv::threshold(srcimg, result, thread, 255, cv::THRESH_BINARY_INV);
+        cv::threshold(srcimg, result, thread, 255, num);
         return result;
     }
 }
