@@ -6,7 +6,6 @@
 #include <histogram/histogramtool.h>
 #include <utils/utils.h>
 #include <videoprocess/videoproc.h>
-#include <morphology/morpho.h>
 #include <preprocessing/preprocessing.h>
 
 extern "C"
@@ -34,22 +33,18 @@ private slots:
     void on_Histogram_clicked();
     void on_colortool_clicked();
     void on_videopc_clicked();
-    void on_morphologyproc_clicked();
     void on_preprocessingtool_clicked();
     //子界面返回槽函数
     void colortool_change_2_mainui_slot();
     void histogramtool_change_2_mainui_slot();
     void videopctool_change_2_mainui_slot();
-    void morproctool_change_2_mainui_slot();
     void preproctool_change_2_mainui_slot();
-
 
 private:
     Ui::MainWindow *ui;
     colortool coltool;
     histogramtool histool;
     videoproc videopc;
-    morpho morproc;
     preprocessing preproc;
 };
 #endif // MAINWINDOW_H

@@ -11,7 +11,7 @@
 #include <utils/utils.h>
 
 
-#define MAX_RESETIMGNUMS 5
+#define MAX_RESETIMGNUMS 10
 
 
 namespace Ui {
@@ -54,10 +54,14 @@ private slots:
 private:
     Ui::preprocessing *ui;
     int imgsub;
+    QRect fontsizechar;
+
     QHBoxLayout *funcwight;
     QLabel *funclabel1;
     QLabel *funclabel2;
     QLabel *funclabel3;
+    QLabel *funclabel4;
+    QLabel *funclabel5;
     QComboBox *funccombox1;
     QComboBox *funccombox2;
     QComboBox *funccombox3;

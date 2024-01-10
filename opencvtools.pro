@@ -11,7 +11,6 @@ CONFIG += c++17
 SOURCES += \
     colortool/colortool.cpp \
     histogram/histogramtool.cpp \
-    morphology/morpho.cpp \
     preprocessing/preprocessing.cpp \
     utils/utils.cpp \
     clog/log.c \
@@ -22,7 +21,6 @@ SOURCES += \
 HEADERS += \
     colortool/colortool.h \
     histogram/histogramtool.h \
-    morphology/morpho.h \
     preprocessing/preprocessing.h \
     utils/utils.h \
     clog/log.h \
@@ -33,7 +31,6 @@ FORMS += \
     colortool/colortool.ui \
     histogram/histogramtool.ui \
     mainwindow.ui \
-    morphology/morpho.ui \
     preprocessing/preprocessing.ui \
     videoprocess/videoproc.ui
 

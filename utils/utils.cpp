@@ -145,6 +145,19 @@ std::string get_funcode_from_file(std::string file, std::string funcname)
     return code;
 }
 
+//传入： cv::Size(4,4)
+cv::Size get_size_from_str(std::string str)
+{
+    cv::Size size;
+    std::string num1,num2;
+    num1 = str.substr(str.find("(")+1);
+    num2 = str.substr(str.find(",")+1);
+    size.width = atoi(num1.c_str());
+    size.height = atoi(num2.c_str());
+    //std::cout<<size<<std::endl;
+    return size;
+}
+
 
 //----------------------------------------------------weight-preprocessing-----------------------------------------------------------
 cv::Mat proc_baipinghengsuanfa(cv::Mat &imgrgb)
@@ -220,6 +233,10 @@ cv::Mat proc_heibaifanzhuan(cv::Mat &imggray)
 
 cv::Mat proc_zhifangtujunhenghua(cv::Mat &imggray)
 {
+//    cv::Mat out;
+//    cv::equalizeHist(imggray, out);
+//    return out;
+
     if(imggray.channels()!=1)
         return imggray;
 
@@ -293,13 +310,14 @@ cv::Mat proc_zhuanBGRtu(cv::Mat &imggray)
 }
 
 
-cv::Mat proc_zidongyuzhifenge(cv::Mat &imgray)
+cv::Mat proc_zidongyuzhifenge(cv::Mat &imgray, int threshnum, int thresholdType, int blockSize, double C)
 {
     cv::Mat srcimg = imgray.clone();
     cv::Mat imgresult;
-    cv::adaptiveThreshold(srcimg, imgresult, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 11, 3);
+    cv::adaptiveThreshold(srcimg, imgresult, 255, threshnum, thresholdType, blockSize, C);
     return imgresult;
 }
+
 
 cv::Mat proc_fushi(cv::Mat &imggray, int shapetype, cv::Size coresize, int nums)
 {

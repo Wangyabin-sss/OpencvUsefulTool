@@ -13,7 +13,6 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(&coltool,SIGNAL(color_change2_mainwindow()),this,SLOT(colortool_change_2_mainui_slot()));
     QObject::connect(&histool,SIGNAL(histogram_change2_mainwindow()),this,SLOT(histogramtool_change_2_mainui_slot()));
     QObject::connect(&videopc,SIGNAL(videopc_change2_mainwindow()),this,SLOT(videopctool_change_2_mainui_slot()));
-    QObject::connect(&morproc,SIGNAL(morpho_change2_mainwindow()),this,SLOT(morproctool_change_2_mainui_slot()));
     QObject::connect(&preproc,SIGNAL(preprocess_change2_mainwindow()),this,SLOT(preproctool_change_2_mainui_slot()));
 }
 
@@ -43,11 +42,6 @@ void MainWindow::on_videopc_clicked()
     videopc.show();
 }
 
-void MainWindow::on_morphologyproc_clicked()
-{
-    this->hide();
-    morproc.show();
-}
 
 void MainWindow::on_preprocessingtool_clicked()
 {
@@ -71,12 +65,6 @@ void MainWindow::histogramtool_change_2_mainui_slot()
 void MainWindow::videopctool_change_2_mainui_slot()
 {
     videopc.hide();
-    this->show();
-}
-
-void MainWindow::morproctool_change_2_mainui_slot()
-{
-    morproc.hide();
     this->show();
 }
 

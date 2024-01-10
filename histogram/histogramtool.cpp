@@ -1,5 +1,20 @@
 #include "histogramtool.h"
 #include "ui_histogramtool.h"
+#include <QMessageBox>
+
+enum HIS_comflag{
+    HIS_zhifangtuBGR,
+    HIS_zhifangtuHSV,
+    HIS_zhifangtuGRAY,
+    HIS_zhifangtutouyingGRAY,
+    HIS_zhifangtutouyingB,
+    HIS_zhifangtutouyingG,
+    HIS_zhifangtutouyingR,
+    HIS_zhifangtutouyingH,
+    HIS_zhifangtutouyingS,
+    HIS_zhifangtutouyingV
+};
+
 
 histogramtool::histogramtool(QWidget *parent) :
     QWidget(parent),
@@ -8,15 +23,15 @@ histogramtool::histogramtool(QWidget *parent) :
     ui->setupUi(this);
 
     ui->comboBox_2->addItem("直方图BGR");     //0
-    ui->comboBox_2->addItem("直方图HSV");     //1
-    ui->comboBox_2->addItem("直方图投影GRAY"); //2
-    ui->comboBox_2->addItem("直方图投影BIN");  //3
-    ui->comboBox_2->addItem("直方图投影B");   //4
-    ui->comboBox_2->addItem("直方图投影G");   //5
-    ui->comboBox_2->addItem("直方图投影R");   //6
-    ui->comboBox_2->addItem("直方图投影H");   //7
-    ui->comboBox_2->addItem("直方图投影S");   //8
-    ui->comboBox_2->addItem("直方图投影V");   //9
+    ui->comboBox_2->addItem("直方图HSV");
+    ui->comboBox_2->addItem("直方图GRAY");
+    ui->comboBox_2->addItem("直方图投影GRAY");
+    ui->comboBox_2->addItem("直方图投影B");
+    ui->comboBox_2->addItem("直方图投影G");
+    ui->comboBox_2->addItem("直方图投影R");
+    ui->comboBox_2->addItem("直方图投影H");
+    ui->comboBox_2->addItem("直方图投影S");
+    ui->comboBox_2->addItem("直方图投影V");
 }
 
 histogramtool::~histogramtool()
@@ -68,7 +83,7 @@ void histogramtool::show_frame_label(QImage img, int labelnum)
 }
 
 
-cv::Mat srcimg;
+static cv::Mat srcimg;
 void histogramtool::on_comboBox_currentIndexChanged(int index)
 {
     if(index == -1)
@@ -87,25 +102,29 @@ void histogramtool::on_comboBox_2_currentIndexChanged(int index)
 
     std::vector<cv::Mat> imgchannels;
     switch (index) {
-    case 0:
+    case HIS_zhifangtuBGR:
+        if(srcimg.channels()!=3)
+        {
+            QMessageBox::information(this,"wanning","仅支持RGB图");
+            break;
+        }
         imgchannels = his_BGRdetach_proc(srcimg);
         for(size_t i=0;i<imgchannels.size();i++)
         {
             show_frame_label(Mat2QImage(imgchannels[i]),i+2);
         }
         break;
-    case 1:
-
-        break;
-    case 2:
+    case HIS_zhifangtuGRAY:
+        if(srcimg.channels()!=1)
+        {
+            QMessageBox::information(this,"wanning","仅支持灰度图");
+            break;
+        }
         imgchannels = his_gray_projection(srcimg);
         for(size_t i=0;i<imgchannels.size();i++)
         {
             show_frame_label(Mat2QImage(imgchannels[i]),i+2);
         }
-        break;
-    case 3:
-
         break;
     default:
         break;

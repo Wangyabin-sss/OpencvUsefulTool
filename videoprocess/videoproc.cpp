@@ -39,7 +39,7 @@ volatile int vthreadrun = 0;   //控制视频线程起停
 volatile int qsilder_status=0; //拖动进度条改变
 volatile long framenow=0;      //当前帧
 volatile int vthread_saveimg = 0;
-cv::Mat vframe;
+static cv::Mat vframe;
 volatile long vtotalFrameNumber;
 volatile double vratefps=24.0;
 #define FLAG_NULL   0

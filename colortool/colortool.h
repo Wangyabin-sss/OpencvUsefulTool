@@ -2,6 +2,7 @@
 #define COLORTOOL_H
 
 #include <QWidget>
+#include <utils/utils.h>
 
 namespace Ui {
 class colortool;
@@ -19,6 +20,8 @@ signals:
     void color_change2_mainwindow();
 
 private slots:
+    void show_frame_label(QImage img, int labelnum);
+
     void on_openimage_clicked();
 
     void on_pushButton_clicked();
