@@ -227,7 +227,17 @@ void preprocessing::on_processimg_clicked()
         procimg = proc_zhifangtujunhenghua(srcimage);
         break;
     case Func_chazhaolunkuo:
+        if(srcimage.channels()!=1)
+        {
+            QMessageBox::information(this,"wanning","仅支持灰度图");
+            break;
+        }
 
+        procimg = proc_chazhaolunkuo(srcimage,
+                                    funccombox1->currentIndex(),
+                                    funccombox2->currentIndex()+1,
+                                    get_scalar_from_str(funcline1->text().toStdString()),
+                                    funcline2->text().toInt());
         break;
     case Func_bianyuanruihua:
 
@@ -399,9 +409,39 @@ void preprocessing::on_comboBox_currentIndexChanged(int index)
         break;
     case Func_chazhaolunkuo:
         funclabel1 = new QLabel;
-        funclabel1->setText("无需设置");
+        funclabel2 = new QLabel;
+        funclabel3 = new QLabel;
+        funcline1 = new QLineEdit;
+        funcline2 = new QLineEdit;
+        funccombox1 = new QComboBox;
+        funccombox2 = new QComboBox;
+        funclabel1->setText("cv::Mat proc_lunkuojiance(cv::Mat &grayimg,");
+        funclabel2->setText(",");
+        funclabel3->setText(");");
+        funcline1->setText("cv::Scalar(0,0,255)");
+        funcline1->setFixedWidth(fontsizechar.width()*25);
+        funcline2->setText("4");
+        funcline2->setFixedWidth(fontsizechar.width()*8);
+        funccombox1->addItem("cv::RETR_EXTERNAL");
+        funccombox1->addItem("cv::RETR_LIST");
+        funccombox1->addItem("cv::RETR_CCOMP");
+        funccombox1->addItem("cv::RETR_TREE");
+        funccombox2->addItem("cv::CHAIN_APPROX_NONE");
+        funccombox2->addItem("cv::CHAIN_APPROX_SIMPLE");
+        funccombox2->addItem("cv::CHAIN_APPROX_TC89_L1");
+        funccombox2->addItem("cv::CHAIN_APPROX_TC89_KCOS");
         funcwight->addWidget(funclabel1);
+        funcwight->addWidget(funccombox1);
+        funcwight->addWidget(funclabel2);
+        funcwight->addWidget(funccombox2);
+        funcwight->addWidget(funclabel2);
+        funcwight->addWidget(funcline1);
+        funcwight->addWidget(funclabel2);
+        funcwight->addWidget(funcline2);
+        funcwight->addWidget(funclabel3);
+        funcwight->addStretch(); //添加弹簧
         ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_chazhaolunkuo").data());
         break;
     case Func_bianyuanruihua:
         funclabel1 = new QLabel;

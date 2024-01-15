@@ -158,6 +158,23 @@ cv::Size get_size_from_str(std::string str)
     return size;
 }
 
+//传入： cv::Scalar(0,0,255)
+cv::Scalar get_scalar_from_str(std::string str)
+{
+    cv::Scalar color;
+    std::string num1,num2,num3;
+    num1 = str.substr(str.find("(")+1);
+    num2 = str.substr(str.find(",")+1);
+    str = str.substr(str.find(",")+1);
+    num3 = str.substr(str.find(",")+1);
+    color[0] = atoi(num1.c_str());
+    color[1] = atoi(num2.c_str());
+    color[2] = atoi(num3.c_str());
+
+    //std::cout<<color<<std::endl;
+    return color;
+}
+
 
 //----------------------------------------------------weight-preprocessing-----------------------------------------------------------
 cv::Mat proc_baipinghengsuanfa(cv::Mat &imgrgb)
@@ -307,6 +324,24 @@ cv::Mat proc_zhuanBGRtu(cv::Mat &imggray)
     cv::Mat bgrimg;
     cv::cvtColor(imggray, bgrimg, cv::COLOR_GRAY2BGR);
     return bgrimg;
+}
+
+
+cv::Mat proc_chazhaolunkuo(cv::Mat &grayimg, int mode, int method, cv::Scalar color, int thickness)
+{
+    //std::cout<<mode<<"  "<<method<<std::endl;
+    cv::Mat srcgray = grayimg.clone();
+    cv::Mat retimg;
+    cv::cvtColor(srcgray,retimg,cv::COLOR_GRAY2BGR);
+
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy;
+    cv::findContours(srcgray,contours,hierarchy,mode,method,cv::Point(0,0));
+    for(int i=0;i<contours.size();i++)
+    {
+        cv::drawContours(retimg, contours, i, color, thickness, cv::LINE_8, hierarchy);
+    }
+    return retimg;
 }
 
 
