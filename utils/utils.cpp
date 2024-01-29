@@ -536,5 +536,32 @@ std::vector<cv::Mat> his_gray_projection(cv::Mat &imggray)
 }
 
 
+std::vector<cv::Mat> his_huiduzhifangtutongji(cv::Mat &imggray)
+{
+    std::vector<cv::Mat> result;
+    int pixall[256]={0};
+    for(int i=0;i<imggray.rows;i++)
+    {
+        for(int j=0;j<imggray.cols;j++)
+        {
+            for(int m=0;m<256;m++)
+            {
+                if(imggray.at<uchar>(i,j)==m)
+                    pixall[m]++;
+            }
+        }
+    }
 
+    cv::Mat img0 = cv::Mat::zeros(cv::Size(256,1),CV_32SC1);
+    for(int i=0;i<img0.rows;i++)
+    {
+        for(int j=0;j<img0.cols;j++)
+        {
+            img0.at<int>(i,j) = pixall[j];
+        }
+    }
+
+    result.push_back(img0);
+    return result;
+}
 

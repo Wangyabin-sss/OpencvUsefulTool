@@ -1,4 +1,5 @@
 QT       += core gui
+QT += charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,6 +11,7 @@ CONFIG += c++17
 
 SOURCES += \
     colortool/colortool.cpp \
+    dimensions/dimensions.cpp \
     histogram/histogramtool.cpp \
     preprocessing/preprocessing.cpp \
     utils/utils.cpp \
@@ -20,6 +22,7 @@ SOURCES += \
 
 HEADERS += \
     colortool/colortool.h \
+    dimensions/dimensions.h \
     histogram/histogramtool.h \
     preprocessing/preprocessing.h \
     utils/utils.h \
@@ -29,6 +32,7 @@ HEADERS += \
 
 FORMS += \
     colortool/colortool.ui \
+    dimensions/dimensions.ui \
     histogram/histogramtool.ui \
     mainwindow.ui \
     preprocessing/preprocessing.ui \

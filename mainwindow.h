@@ -7,6 +7,7 @@
 #include <utils/utils.h>
 #include <videoprocess/videoproc.h>
 #include <preprocessing/preprocessing.h>
+#include <dimensions/dimensions.h>
 
 extern "C"
 {
@@ -34,11 +35,14 @@ private slots:
     void on_colortool_clicked();
     void on_videopc_clicked();
     void on_preprocessingtool_clicked();
+    void on_dimenstool_clicked();
     //子界面返回槽函数
     void colortool_change_2_mainui_slot();
     void histogramtool_change_2_mainui_slot();
     void videopctool_change_2_mainui_slot();
     void preproctool_change_2_mainui_slot();
+    void dimens_change_2_mainui_slot();
+
 
 private:
     Ui::MainWindow *ui;
@@ -46,5 +50,6 @@ private:
     histogramtool histool;
     videoproc videopc;
     preprocessing preproc;
+    Dimensions dimens;
 };
 #endif // MAINWINDOW_H

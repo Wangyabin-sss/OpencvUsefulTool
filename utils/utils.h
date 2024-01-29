@@ -40,6 +40,7 @@ cv::Mat proc_chazhaolunkuo(cv::Mat &grayimg, int mode, int method, cv::Scalar co
 
 std::vector<cv::Mat> his_BGRdetach_proc(cv::Mat &img);
 std::vector<cv::Mat> his_gray_projection(cv::Mat &imggray);
+std::vector<cv::Mat> his_huiduzhifangtutongji(cv::Mat &imggray);
 
 #endif
 

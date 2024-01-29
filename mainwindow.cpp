@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(&histool,SIGNAL(histogram_change2_mainwindow()),this,SLOT(histogramtool_change_2_mainui_slot()));
     QObject::connect(&videopc,SIGNAL(videopc_change2_mainwindow()),this,SLOT(videopctool_change_2_mainui_slot()));
     QObject::connect(&preproc,SIGNAL(preprocess_change2_mainwindow()),this,SLOT(preproctool_change_2_mainui_slot()));
+    QObject::connect(&dimens,SIGNAL(dimens_change2_mainwindow()),this,SLOT(dimens_change_2_mainui_slot()));
 }
 
 MainWindow::~MainWindow()
@@ -49,6 +50,12 @@ void MainWindow::on_preprocessingtool_clicked()
     preproc.show();
 }
 
+void MainWindow::on_dimenstool_clicked()
+{
+    this->hide();
+    dimens.show();
+}
+
 //-----------------------------------子界面返回信号的槽函数-----------------------------------
 void MainWindow::colortool_change_2_mainui_slot()
 {
@@ -75,5 +82,8 @@ void MainWindow::preproctool_change_2_mainui_slot()
     preproc.hide();
 }
 
-
-
+void MainWindow::dimens_change_2_mainui_slot()
+{
+    this->show();
+    dimens.hide();
+}

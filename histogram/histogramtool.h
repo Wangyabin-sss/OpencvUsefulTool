@@ -3,6 +3,10 @@
 
 #include <QWidget>
 #include <utils/utils.h>
+#include <QVBoxLayout>
+#include <QtCharts>
+
+QT_CHARTS_USE_NAMESPACE
 
 namespace Ui {
 class histogramtool;
@@ -30,9 +34,14 @@ private slots:
 
     void on_comboBox_2_currentIndexChanged(int index);
 
+    void update_qcharts_data(QLineSeries *ser);
+
 private:
     Ui::histogramtool *ui;
     std::vector<std::string> filelist;
+    QChart *qchartdata;
+    QChartView *chartView;
+    QLineSeries *series;
 };
 
 #endif // HISTOGRAMTOOL_H
