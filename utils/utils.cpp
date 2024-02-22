@@ -372,6 +372,18 @@ cv::Mat proc_pengzhang(cv::Mat &imggray, int shapetype, cv::Size coresize, int n
     return ret;
 }
 
+cv::Mat proc_xuanzhuan(cv::Mat &img, float angle)
+{
+    cv::Mat retimg;
+    // 定义旋转中心点（图像中心点）
+    cv::Point2f center(img.cols / 2.0, img.rows / 2.0);
+    // 计算旋转矩阵
+    cv::Mat rotationMatrix = cv::getRotationMatrix2D(center, angle, 1.0);
+    cv::warpAffine(img, retimg, rotationMatrix, img.size());
+
+    return retimg;
+}
+
 //----------------------------------------------------weight-histogram-----------------------------------------------------------
 std::vector<cv::Mat> his_BGRdetach_proc(cv::Mat &img)
 {

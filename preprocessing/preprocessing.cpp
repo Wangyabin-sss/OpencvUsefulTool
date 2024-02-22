@@ -17,7 +17,8 @@ enum ComBOXfuncType {
     Func_bianyuanruihua,
     Func_zidongyuzhifenge,
     Func_fushi,
-    Func_pengzhang
+    Func_pengzhang,
+    Func_xuanzhuan
 };
 
 
@@ -56,6 +57,7 @@ preprocessing::preprocessing(QWidget *parent) :
     ui->comboBox->addItem("自动阈值分割");
     ui->comboBox->addItem("腐蚀");
     ui->comboBox->addItem("膨胀");
+    ui->comboBox->addItem("旋转");
 
     ui->comboBox->setStyleSheet("QComboBox QAbstractItemView::item {min-height: 30px; min-width:40px;}");
     //需要设置QListView才能设置行高
@@ -103,7 +105,7 @@ void preprocessing::on_openimg_clicked()
     {
         procimgs.clear();
         imgsub = 0;
-        srcimage = cv::imread(filelist[0], cv::IMREAD_UNCHANGED);
+        srcimage = cv::imread(filelist[0], cv::IMREAD_ANYCOLOR);
         Dbuginfo("read img type is  %s\n", get_imgtype_string(srcimage.depth(),srcimage.channels()).c_str());
         for(int i=0;i<MAX_RESETIMGNUMS;i++)
         {
@@ -155,7 +157,7 @@ void preprocessing::on_saveimage_clicked()
 {
     QDateTime dateTime= QDateTime::currentDateTime();//获取系统当前的时间
     QString datastr = dateTime.toString("yyyy-MM-ddThh-mm-ssM");//格式化时间
-    QString filename(datastr+QString::number(imgsub)+".bmp");
+    QString filename(datastr+QString::number(imgsub)+".png");
     if(procimgs[imgsub].empty())
     {
         QMessageBox::information(this,"error","保存失败\n图片为空");
@@ -298,6 +300,9 @@ void preprocessing::on_processimg_clicked()
         procimg = proc_pengzhang(srcimage,funccombox1->currentIndex(),
                                  get_size_from_str(funcline1->text().toStdString()),
                                  funcline2->text().toInt());
+        break;
+    case Func_xuanzhuan:
+        procimg = proc_xuanzhuan(srcimage,funcline1->text().toFloat());
         break;
     default:
         break;
@@ -565,6 +570,21 @@ void preprocessing::on_comboBox_currentIndexChanged(int index)
 
         ui->verticalLayout_2->update();
         ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_pengzhang").data());
+        break;
+    case Func_xuanzhuan:
+        funclabel1 = new QLabel;
+        funclabel2 = new QLabel;
+        funcline1 = new QLineEdit;
+        funclabel1->setText("cv::Mat proc_xuanzhuan(cv::Mat &srcimg,");
+        funclabel2->setText(");");
+        funcline1->setText("10.0");
+        funcwight->addWidget(funclabel1);
+        funcwight->addWidget(funcline1);
+        funcwight->addWidget(funclabel2);
+        funcwight->addStretch(); //添加弹簧
+        ui->verticalLayout_2->update();
+        ui->textEdit->setPlainText(get_funcode_from_file(pathutilsfile,"proc_xuanzhuan").data());
+
         break;
     default:
         break;

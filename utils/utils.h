@@ -37,6 +37,7 @@ cv::Mat proc_zidongyuzhifenge(cv::Mat &imgray, int threshnum, int thresholdType,
 cv::Mat proc_fushi(cv::Mat &imggray, int shapetype, cv::Size coresize, int nums);
 cv::Mat proc_pengzhang(cv::Mat &imggray, int shapetype, cv::Size coresize, int nums);
 cv::Mat proc_chazhaolunkuo(cv::Mat &grayimg, int mode, int method, cv::Scalar color, int thickness);
+cv::Mat proc_xuanzhuan(cv::Mat &img, float angle);
 
 std::vector<cv::Mat> his_BGRdetach_proc(cv::Mat &img);
 std::vector<cv::Mat> his_gray_projection(cv::Mat &imggray);
