@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(&videopc,SIGNAL(videopc_change2_mainwindow()),this,SLOT(videopctool_change_2_mainui_slot()));
     QObject::connect(&preproc,SIGNAL(preprocess_change2_mainwindow()),this,SLOT(preproctool_change_2_mainui_slot()));
     QObject::connect(&dimens,SIGNAL(dimens_change2_mainwindow()),this,SLOT(dimens_change_2_mainui_slot()));
+    QObject::connect(&croptool,SIGNAL(croptool_change2_mainwindow()),this,SLOT(croptool_change_2_mainui_slot()));
+    QObject::connect(&yololabtool,SIGNAL(yololabeltool_change2_mainwindow()),this,SLOT(yololabeltool_change_2_mainui_slot()));
 }
 
 MainWindow::~MainWindow()
@@ -56,6 +58,22 @@ void MainWindow::on_dimenstool_clicked()
     dimens.show();
 }
 
+void MainWindow::on_croptool_clicked()
+{
+    this->hide();
+    croptool.show();
+}
+
+
+void MainWindow::on_yololabeltool_clicked()
+{
+    this->hide();
+    yololabtool.show();
+}
+
+
+
+
 //-----------------------------------子界面返回信号的槽函数-----------------------------------
 void MainWindow::colortool_change_2_mainui_slot()
 {
@@ -87,3 +105,19 @@ void MainWindow::dimens_change_2_mainui_slot()
     this->show();
     dimens.hide();
 }
+
+void MainWindow::croptool_change_2_mainui_slot()
+{
+    this->show();
+    croptool.hide();
+}
+
+void MainWindow::yololabeltool_change_2_mainui_slot()
+{
+    this->show();
+    yololabtool.hide();
+}
+
+
+
+

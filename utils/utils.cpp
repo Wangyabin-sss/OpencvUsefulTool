@@ -1,5 +1,5 @@
 #include <utils/utils.h>
-
+#include <windows.h>
 
 //mat转QImage格式（直接调用即可）
 QImage Mat2QImage(cv::Mat& cvImgsrc)
@@ -37,6 +37,50 @@ QImage Mat2QImage(cv::Mat& cvImgsrc)
     return qImg;
 
 }
+
+
+
+std::wstring Utf8ToUtf16(const std::string& utf8Str) {
+    int len = MultiByteToWideChar(CP_UTF8, 0, utf8Str.c_str(), -1, nullptr, 0);
+    if (len == 0) {
+        //logger->error("MultiByteToWideChar failed");
+        return L"";
+    }
+
+    wchar_t* buf = new wchar_t[len];
+    MultiByteToWideChar(CP_UTF8, 0, utf8Str.c_str(), -1, buf, len);
+    std::wstring utf16Str(buf);
+    delete[] buf;
+    return utf16Str;
+}
+
+std::string Utf16ToGb2312(const std::wstring& utf16Str) {
+    int len = WideCharToMultiByte(CP_ACP, 0, utf16Str.c_str(), -1, nullptr, 0, nullptr, nullptr);
+    if (len == 0) {
+        //logger->error("WideCharToMultiByte failed");
+        return "";
+    }
+
+    char* buf = new char[len];
+    WideCharToMultiByte(CP_ACP, 0, utf16Str.c_str(), -1, buf, len, nullptr, nullptr);
+    std::string gb2312Str(buf);
+    delete[] buf;
+    return gb2312Str;
+}
+
+
+// 均匀生成 N 个颜色 (RGB 线性插值)
+std::vector<cv::Scalar> generateColorsRGB(int numColors) {
+    std::vector<cv::Scalar> colors;
+    for (int i = 0; i < numColors; ++i) {
+        float r = static_cast<float>(i) / numColors;       // 红色通道渐变
+        float g = static_cast<float>((i * 3) % numColors) / numColors; // 绿色通道渐变
+        float b = static_cast<float>((i * 7) % numColors) / numColors; // 蓝色通道渐变
+        colors.push_back(cv::Scalar(b * 255, g * 255, r * 255)); // 转换到 BGR
+    }
+    return colors;
+}
+
 
 QString str2qstr(const std::string str)
 {
@@ -412,7 +456,7 @@ std::vector<cv::Mat> his_BGRdetach_proc(cv::Mat &img)
     cv::Mat histImage(hist_h, hist_w, CV_8UC3, cv::Scalar(0, 0, 0));//创建一个黑底的图像，为了可以显示彩色，所以该绘制图像是一个8位的3通道图像
     for(int i=0;i<3;i++)
         result.push_back(histImage.clone());
-    //-------------将直方图归一化到[0,histImage.rows]  ------------------------------------------------------------------------------
+    //-------------将直方图归一化到[0,histImage.rows]  ------------------------------------------
     cv::normalize(b_Hist, b_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //B-通道
     cv::normalize(g_Hist, g_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //G-通道
     cv::normalize(r_Hist, r_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //R-通道
@@ -452,7 +496,7 @@ std::vector<cv::Mat> his_HSVdetach_proc(cv::Mat &srcimg)
     float range[] = { 0, 256 };
     const float* histRange = { range };
     cv::Mat  b_Hist, g_Hist, r_Hist;
-    //-------------计算各个通道的直方图--------------------------------------
+    //-------------计算各个通道的直方图-------------------------------------------------
     cv::calcHist(&imgchannels[0], 1, 0, cv::Mat(), b_Hist, 1, histsize, &histRange, true, false); //B-通道
     cv::calcHist(&imgchannels[1], 1, 0, cv::Mat(), g_Hist, 1, histsize, &histRange, true, false); //G-通道
     cv::calcHist(&imgchannels[2], 1, 0, cv::Mat(), r_Hist, 1, histsize, &histRange, true, false); //R-通道
@@ -464,7 +508,7 @@ std::vector<cv::Mat> his_HSVdetach_proc(cv::Mat &srcimg)
     cv::Mat histImage(hist_h, hist_w, CV_8UC3, cv::Scalar(0, 0, 0));//创建一个黑底的图像，为了可以显示彩色，所以该绘制图像是一个8位的3通道图像
     for(int i=0;i<3;i++)
         result.push_back(histImage);
-    //-------------将直方图归一化到[0,histImage.rows]  ------------------------------------------------------------------------------
+    //-------------将直方图归一化到[0,histImage.rows]  ------------------------------------------
     cv::normalize(b_Hist, b_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //B-通道
     cv::normalize(g_Hist, g_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //G-通道
     cv::normalize(r_Hist, r_Hist, 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());  //R-通道

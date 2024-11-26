@@ -11,6 +11,7 @@ CONFIG += c++17
 
 SOURCES += \
     colortool/colortool.cpp \
+    croptool/croptool.cpp \
     dimensions/dimensions.cpp \
     histogram/histogramtool.cpp \
     preprocessing/preprocessing.cpp \
@@ -18,25 +19,30 @@ SOURCES += \
     clog/log.c \
     main.cpp \
     mainwindow.cpp \
-    videoprocess/videoproc.cpp
+    videoprocess/videoproc.cpp \
+    yololabeltool/yololabeltool.cpp
 
 HEADERS += \
     colortool/colortool.h \
+    croptool/croptool.h \
     dimensions/dimensions.h \
     histogram/histogramtool.h \
     preprocessing/preprocessing.h \
     utils/utils.h \
     clog/log.h \
     mainwindow.h \
-    videoprocess/videoproc.h
+    videoprocess/videoproc.h \
+    yololabeltool/yololabeltool.h
 
 FORMS += \
     colortool/colortool.ui \
+    croptool/croptool.ui \
     dimensions/dimensions.ui \
     histogram/histogramtool.ui \
     mainwindow.ui \
     preprocessing/preprocessing.ui \
-    videoprocess/videoproc.ui
+    videoprocess/videoproc.ui \
+    yololabeltool/yololabeltool.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

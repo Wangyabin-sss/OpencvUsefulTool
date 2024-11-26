@@ -166,7 +166,7 @@ void preprocessing::on_saveimage_clicked()
     cv::imwrite(std::string(filename.toStdString()), procimgs[imgsub]);
 }
 
-std::string pathutilsfile = "../opencvtools/utils/utils.cpp";
+std::string pathutilsfile = "../utils/utils.cpp";
 void preprocessing::on_processimg_clicked()
 {
     //检查结果是否需要叠加

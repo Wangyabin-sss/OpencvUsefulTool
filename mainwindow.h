@@ -8,6 +8,8 @@
 #include <videoprocess/videoproc.h>
 #include <preprocessing/preprocessing.h>
 #include <dimensions/dimensions.h>
+#include <croptool/croptool.h>
+#include <yololabeltool/yololabeltool.h>
 
 extern "C"
 {
@@ -36,12 +38,16 @@ private slots:
     void on_videopc_clicked();
     void on_preprocessingtool_clicked();
     void on_dimenstool_clicked();
+    void on_croptool_clicked();
+    void on_yololabeltool_clicked();
     //子界面返回槽函数
     void colortool_change_2_mainui_slot();
     void histogramtool_change_2_mainui_slot();
     void videopctool_change_2_mainui_slot();
     void preproctool_change_2_mainui_slot();
     void dimens_change_2_mainui_slot();
+    void croptool_change_2_mainui_slot();
+    void yololabeltool_change_2_mainui_slot();
 
 
 private:
@@ -51,5 +57,7 @@ private:
     videoproc videopc;
     preprocessing preproc;
     Dimensions dimens;
+    croptool croptool;
+    yololabeltool yololabtool;
 };
 #endif // MAINWINDOW_H

@@ -21,9 +21,12 @@ QImage Mat2QImage(cv::Mat& cvImgsrc);
 std::vector<std::string> get_filename_dialog(QString filetype);
 std::string get_imgtype_string(int depth , int channel);
 std::string get_funcode_from_file(std::string file, std::string funcname);
+std::vector<cv::Scalar> generateColorsRGB(int numColors);
 cv::Size get_size_from_str(std::string str);
 cv::Scalar get_scalar_from_str(std::string str);
 
+std::wstring Utf8ToUtf16(const std::string& utf8Str);
+std::string Utf16ToGb2312(const std::wstring& utf16Str);
 QString str2qstr(const std::string str);
 std::string qstr2str(const QString qstr);
 
